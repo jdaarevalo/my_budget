@@ -1,13 +1,22 @@
 version: '2'
 services:
-  db:
-    image: postgres
   web:
     build: .
+    image: my_budget
+    env_file: .env
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
-      - .:/my_budget
+      - "./:/my_budget"
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      - postgres
+    links:
+      - postgres:postgres
+ 
+  postgres:
+    image: postgres:9.4
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+
+
